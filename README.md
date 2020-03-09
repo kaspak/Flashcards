@@ -6,7 +6,7 @@
 Simple Flashcards app where users can edit flashcard question and answers.
 
 ### App Walk-though
-<img src="https://raw.githubusercontent.com/kaspak/Flashcards/master/Lab1.gif" width=200><br>
+<img src="https://github.com/kaspak/Flashcards/blob/master/Lab2.gif" width=250><br>
 
 ## Required
 - [x] User can open the creation screen
