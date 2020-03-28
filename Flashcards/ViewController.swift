@@ -31,6 +31,9 @@ class ViewController: UIViewController {
     var flashcards = [Flashcard]()
     var currentIndex = 0
     
+    /* Stylizes flashcards and updates flashcards with previously existing cards
+     * or initalizes a new flashcard.
+     */
     override func viewDidLoad() {
         super.viewDidLoad()
         Card.layer.cornerRadius = 20.0
@@ -50,9 +53,10 @@ class ViewController: UIViewController {
         op3.layer.cornerRadius = 20.0
         op3.layer.borderColor = #colorLiteral(red: 0.003117383691, green: 0.5182323456, blue: 0.98661834, alpha: 1)
         
+        // Checks if there were any previously existing flashcards
         readSavedFlashcards()
         
-        //Adding initial flashcard if needed
+        // Adding initial flashcard if there are now previously existing flashcards
         if flashcards.count == 0 {
             updateFlashcard(question: "What year was the war of 1812", answer: "1812")
         }
@@ -77,7 +81,11 @@ class ViewController: UIViewController {
     }
     
     @IBAction func didTapOnFrontCard(_ sender: UILabel) {
-        print("Working")
+        flipFlashcard()
+    }
+    
+    func flipFlashcard() {
+        UIView.transition(with: Card, duration: 0.3, options: .transitionFlipFromRight, animations: {print("Working")})
         if(frontLabel.isHidden == true) {
             frontLabel.isHidden = false
             op1.isHidden = false
@@ -87,6 +95,20 @@ class ViewController: UIViewController {
             op1.isHidden = true
             op3.isHidden = true
             frontLabel.isHidden = true
+        }
+    }
+    
+    func animateCardOut() {
+        UIView.animate(withDuration: 0.3, animations: {self.Card.transform = CGAffineTransform.identity.translatedBy(x: -300.0, y: 0.0)}, completion: { finished in self.animateCardIn() })
+    }
+    
+    func animateCardIn() {
+        // Start on the right side
+        Card.transform = CGAffineTransform.identity.translatedBy(x: 500.0, y: 0.0)
+        self.updateLabels()
+        // Animate card going back to its original position
+        UIView.animate(withDuration: 0.3) {
+            self.Card.transform = CGAffineTransform.identity
         }
     }
     
@@ -110,12 +132,13 @@ class ViewController: UIViewController {
             updateLabels()
             updateNextPrevButtons()
         }
+        animateCardIn()
     }
     
     @IBAction func didTapOnNext(_ sender: Any) {
         currentIndex = currentIndex + 1
-        updateLabels()
         updateNextPrevButtons()
+        animateCardOut()
     }
     
     func updateLabels() {
@@ -172,6 +195,11 @@ class ViewController: UIViewController {
         
         // We set the flashcardsController prop to self
         creationController.flashcardsController = self
+        
+        
+        /* Currently saves as a new edited flashcard instead of editing the same card. */
+        creationController.initialQuestion = frontLabel.text
+        creationController.initialAnswer = backLabel.text
     }
     
 }
